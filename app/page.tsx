@@ -6,7 +6,6 @@ import leadsData from '@/event_companies_hyderabad.json'
 import {
   Search,
   Filter,
-  TrendingUp,
   DollarSign,
   Users,
   Target,
@@ -22,8 +21,7 @@ import {
   XCircle,
   MessageSquare,
   Plus,
-  Download,
-  BarChart3
+  Download
 } from 'lucide-react'
 
 type StatusType = 'new' | 'contacted' | 'in_progress' | 'won' | 'lost'
@@ -139,10 +137,6 @@ export default function Dashboard() {
   // Analytics
   const analytics = useMemo(() => {
     const total = leads.length
-    const totalValue = leads.reduce((sum, lead) => sum + lead.estimatedValue, 0)
-    const wonValue = leads
-      .filter(lead => lead.status === 'won')
-      .reduce((sum, lead) => sum + lead.estimatedValue, 0)
     const statusCounts = {
       new: leads.filter(l => l.status === 'new').length,
       contacted: leads.filter(l => l.status === 'contacted').length,
@@ -150,9 +144,8 @@ export default function Dashboard() {
       won: leads.filter(l => l.status === 'won').length,
       lost: leads.filter(l => l.status === 'lost').length,
     }
-    const conversionRate = total > 0 ? ((statusCounts.won / total) * 100).toFixed(1) : '0'
 
-    return { total, totalValue, wonValue, statusCounts, conversionRate }
+    return { total, statusCounts }
   }, [leads])
 
   // Export data
@@ -240,7 +233,7 @@ export default function Dashboard() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Analytics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 gap-6 mb-8">
           <div className="card p-6 animate-fade-in">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-sm font-medium text-gray-500">Total Leads</h3>
@@ -248,33 +241,6 @@ export default function Dashboard() {
             </div>
             <p className="text-3xl font-bold text-gray-900">{analytics.total}</p>
             <p className="text-xs text-gray-500 mt-1">Active in pipeline</p>
-          </div>
-
-          <div className="card p-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-medium text-gray-500">Total Value</h3>
-              <DollarSign className="w-5 h-5 text-green-600" />
-            </div>
-            <p className="text-3xl font-bold text-gray-900">{formatCurrency(analytics.totalValue)}</p>
-            <p className="text-xs text-gray-500 mt-1">Pipeline value</p>
-          </div>
-
-          <div className="card p-6 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-medium text-gray-500">Won Value</h3>
-              <TrendingUp className="w-5 h-5 text-emerald-600" />
-            </div>
-            <p className="text-3xl font-bold text-gray-900">{formatCurrency(analytics.wonValue)}</p>
-            <p className="text-xs text-gray-500 mt-1">Closed deals</p>
-          </div>
-
-          <div className="card p-6 animate-fade-in" style={{ animationDelay: '0.3s' }}>
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-medium text-gray-500">Conversion Rate</h3>
-              <BarChart3 className="w-5 h-5 text-purple-600" />
-            </div>
-            <p className="text-3xl font-bold text-gray-900">{analytics.conversionRate}%</p>
-            <p className="text-xs text-gray-500 mt-1">Win rate</p>
           </div>
         </div>
 
